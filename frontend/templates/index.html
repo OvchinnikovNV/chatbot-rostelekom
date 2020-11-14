@@ -69,12 +69,13 @@
                 return false;
             }
             generate_message(msg, 'self');
+            getNeuralResponse(msg);
         })
 
 
         function generate_message(msg, type) {
             idx++;
-            var str = "";
+            let str = "";
             if (type == 'self') {
                 str += "<div id='cm-msg-" + idx + "' class=\"chat-msg " + type + "\">";
                 str += "<div class=\"cm-msg-text\">";
@@ -103,6 +104,15 @@
                 scrollTop: $(".chat-logs")[0].scrollHeight
             }, 1000);
         }
+
+        function getNeuralResponse(msg) {
+            let rawText = msg;
+            $.get("/get",  {msg: rawText }).done(function(data) {
+                let botMsg = data;
+                generate_message(botMsg, 'bot');
+            });
+        }
+       
 
         $("#chat-click").click(function () {
             $("#chat-click").hide('scale');
