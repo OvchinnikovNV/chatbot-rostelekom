@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rostelekom ChatBot</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="body">
+    <style>
+        body{
+            background-image: url("back.PNG");
+        }
+    </style>
+
+    <div id="chat-click" class="btn btn-raised">
+        <div id="chat-overlay"></div>
+    </div>
+    <div class="chat-box">
+        <div class="chat-box-body">
+
+            <div id="chat-box__wraper">
+                <div class="chat-box-header">
+                    Ростелеком
+                    <span class="chat-box-toggle"><i class="material-icons">cancel</i></span>
+                </div>
+
+
+                <div class="chat-box-overlay">
+                </div>
+                <div class="chat-logs">
+                    <div id="cm-msg-0" class="chat-msg bot">
+                        <div class="cm-msg-text">
+                            Привет! Я менеджер Наталья. Чем могу помочь?
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input-box">
+            <form class="chat-input__form">
+                <input type="text" class="chat-input__text" id="chat-input__text" placeholder="Сообщение" />
+                <button type="submit" class="chat-submit" id="chat-submit"><i class="material-icons">send</i></button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script>
+    $(function () {
+
+        let msg = "";
+        let bot_msg;
+        let idx = 0;
+
+
+        $("#chat-submit").click(function (e) {
+            e.preventDefault();
+            msg = $("#chat-input__text").val();
+            if (msg.trim() == '') {
+                return false;
+            }
+            generate_message(msg, 'self');
+        })
+
+
+        function generate_message(msg, type) {
+            idx++;
+            var str = "";
+            if (type == 'self') {
+                str += "<div id='cm-msg-" + idx + "' class=\"chat-msg " + type + "\">";
+                str += "<div class=\"cm-msg-text\">";
+                str += msg;
+                str += "<\/div>";
+                str += "<\/div>";
+
+            } else {
+                str += "<div id='cm-msg-" + idx + "' class=\"chat-msg " + type + "\">";
+                str += "<\/span>";
+                str += "<div class=\"cm-msg-text\">";
+                str += msg;
+                str += "<\/div>";
+                str += "<\/div>";
+
+            }
+
+            $(".chat-logs").append(str);
+            $("#cm-msg-" + idx).hide().fadeIn(500);
+
+            if (type == 'self') {
+                $("#chat-input__text").val('');
+            }
+
+            $(".chat-logs").stop().animate({
+                scrollTop: $(".chat-logs")[0].scrollHeight
+            }, 1000);
+        }
+
+        $("#chat-click").click(function () {
+            $("#chat-click").hide('scale');
+            $(".chat-box").show('scale');
+            $(".chat-box-welcome__header").show('scale');
+            $("#chat-box__wraper").show();
+        })
+
+        $(".chat-box-toggle").click(function () {
+            $("#chat-click").show('scale');
+            $(".chat-box").hide('scale');
+            $(".chat-box-welcome__header").hide('scale');
+            $("#chat-box__wraper").hide('scale');
+        })
+    })
+
+</script>
+</body>
+</html>
+
