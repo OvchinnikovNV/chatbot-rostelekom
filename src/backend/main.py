@@ -2,17 +2,20 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
+import json
 from torch.utils.data import Dataset, DataLoader
 from text_formatter import bag_of_words, tokenizator, normal_word
 from neural_network import NeuralNetwork
+from nltk.corpus import stopwords
 
+with open('../tags.json', 'r', encoding='UTF-8') as f:
+    links = json.load(f)
 
 all_words = []
 tags = []
 prepared_data = []
 
-train_data = pd.read_excel('C:\\Users\\admin\\Desktop\\Python_work\\Hackaton\\'
-                           'DataSet.xlsx', encoding='windows-1251')
+train_data = pd.read_excel('../DataSet.xlsx')
 x = np.array(train_data['Обращение'])
 y = np.array(train_data['Тип обращения'])
 
@@ -27,16 +30,20 @@ for i in range(len(x)):
 
 
 # приводим слова к одиноковому морфологическому виду и убираем лишние
-ignore_words = ['?', '.', '!', ',', '(', ')', '-', '...']
-all_words = [normal_word(word) for word in all_words if word not in ignore_words]
+ignored_words = ['?', '.', '!', ',', '(', ')', '-', '...', ':', ', ', '/', '—',
+                 '«', '»', 'хочу', 'хотеть', 'хотеться', 'хотя', 'добрый',
+                 'день', 'вечер', 'здравствть', 'здравствуй', 'здравствуйте',
+                 'здравствуйте.', 'здраствовать', 'пожалуйста', 'пожалуцст',
+                 'привет']
+stop_words = stopwords.words("russian") + ignored_words
+all_words = [normal_word(word) for word in all_words if normal_word(word) not in stop_words]
 all_words = sorted(set(all_words))
 tags = sorted(tags)
 
-
 # print(len(tags), "Тэги:", tags)
 # print(len(all_words), "Уникальные слова:", all_words)
-# собираем данные для обучения
 
+# собираем данные для обучения
 X_train = []
 y_train = []
 
@@ -49,19 +56,16 @@ for (pattern_sentence, tag) in prepared_data:
 X_train = np.array(X_train)
 y_train = np.array(y_train)
 
-
 # Параметры нейронной сети
-count_epochs = 1000
-batch_size = 50
+count_epochs = 100
+batch_size = 10
 learning_rate = 0.001
 input_size = len(X_train[0])
-hidden_size = 80
+hidden_size = 60
 output_size = len(tags)
-# print(input_size, output_size)
 
 
 class DatasetForChat(Dataset):
-
     def __init__(self):
         self.samples_count = len(X_train)
         self.x_data = X_train
@@ -81,7 +85,6 @@ train_loader = DataLoader(dataset=dataset,
                           num_workers=0)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 model = NeuralNetwork(input_size, hidden_size, output_size).to(device)
 
 # критерий и функция оптимизации
@@ -99,24 +102,23 @@ for epoch in range(count_epochs):
         losses.backward()
         optimizer.step()
         
-    if (epoch+1) % 100 == 0:
+    if (epoch+1) % 10 == 0:
         print(f'Epoch [{epoch+1}/{count_epochs}], Loss: {losses.item():.4f}')
-
 
 print(f'final losses: {losses.item():.4f}')
 
 data = {
-"model_state": model.state_dict(),
-"input_size": input_size,
-"hidden_size": hidden_size,
-"output_size": output_size,
-"all_words": all_words,
-"tags": tags
+    "model_state": model.state_dict(),
+    "input_size": input_size,
+    "hidden_size": hidden_size,
+    "output_size": output_size,
+    "all_words": all_words,
+    "tags": tags,
+    "links": links
 }
 
 # сохраняем обученную модель
 FILE = "model.pth"
 torch.save(data, FILE)
 
-print(f'обучение завершено. файл сохранен как: {FILE}')
-
+print(f'Обучение завершено. файл сохранен как: {FILE}')
