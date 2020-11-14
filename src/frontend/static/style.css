@@ -5,6 +5,9 @@
 html,
 body {
     background-image: url("back.PNG");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     height: 100%;
     font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
@@ -13,8 +16,6 @@ body {
     font-family: 'Roboto';
     position: relative;
 }
-
-/*powered by deeppixel*/
 
 .chat-box__sign {
     font-size: 9px;
