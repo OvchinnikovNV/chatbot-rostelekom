@@ -32,7 +32,7 @@ Frontend и backend на данный момент **не связаны**.
 
 4) Добавлены **уникальные ответы** чат-бота для категорий/подкатегорий раздела https://moscow.rt.ru/support
 
-![result]()
+![result](https://github.com/OvchinnikovNV/chatbot-rostelekom/blob/main/rsc/chat_bot.gif)
 
 ## Installation
 
