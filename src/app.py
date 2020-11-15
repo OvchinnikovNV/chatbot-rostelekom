@@ -17,5 +17,4 @@ def neural_network():
 
 
 if __name__ == '__main__':
-    #app.run(debug=True)
     app.run()

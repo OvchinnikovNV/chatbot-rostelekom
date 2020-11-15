@@ -11,6 +11,9 @@ from nltk.corpus import stopwords
 with open('../tags.json', 'r', encoding='UTF-8') as f:
     links = json.load(f)
 
+with open('../answers.json', 'r', encoding='UTF-8') as f:
+    answers = json.load(f)
+
 all_words = []
 tags = []
 prepared_data = []
@@ -114,7 +117,8 @@ data = {
     "output_size": output_size,
     "all_words": all_words,
     "tags": tags,
-    "links": links
+    "links": links,
+    "answers": answers
 }
 
 # сохраняем обученную модель

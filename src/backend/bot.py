@@ -17,6 +17,7 @@ def bot(sentence):
     tags = data['tags']
     model_state = data["model_state"]
     links = data["links"]
+    answers = data["answers"]
 
     model = NeuralNetwork(input_size, hidden_size, output_size).to(device)
     model.load_state_dict(model_state)
@@ -35,6 +36,6 @@ def bot(sentence):
     probabilities = torch.softmax(output, dim=1)
     probability = probabilities[0][prediction.item()]
     if probability.item() > 0.75:
-        return links.get(tag)
+        return links.get(tag) + "\n" + answers.get(tag)
     else:
-        return 'Извините, но я Вас не понимаю.'
+        return '\n' + 'Извините, но я Вас не понимаю.'

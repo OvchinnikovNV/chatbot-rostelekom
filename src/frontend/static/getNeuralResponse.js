@@ -9,11 +9,11 @@ $(function () {
         if (msg.trim() == '') {
             return false;
         }
-        generate_message(msg, 'self');
+        generate_message(msg, '', 'self');
         getNeuralResponse(msg);
     })
 
-    function generate_message(msg, type) {
+    function generate_message(msg, link, type) {
         idx++;
         let str = "";
         if (type == 'self') {
@@ -27,7 +27,13 @@ $(function () {
             str += "<div id='cm-msg-" + idx + "' class=\"chat-msg " + type + "\">";
             str += "<\/span>";
             str += "<div class=\"cm-msg-text\">";
-            str += msg;
+            str += msg
+            if(link != '')
+            {
+                str += "<a href=\""
+                str += link;
+                str += "\">" + 'здесь'+ ".<\/a>"
+            }
             str += "<\/div>";
             str += "<\/div>";
         }
@@ -47,8 +53,9 @@ $(function () {
     function getNeuralResponse(msg) {
         let rawText = msg;
         $.get("/get", { msg: rawText }).done(function(data) {
-            let botMsg = data;
-            generate_message(botMsg, 'bot');
+            let botMsg = data.split('\n');
+            console.log(botMsg);
+            generate_message(botMsg[1], botMsg[0], 'bot');
         });
     }
 
