@@ -60,8 +60,8 @@ X_train = np.array(X_train)
 y_train = np.array(y_train)
 
 # Параметры нейронной сети
-count_epochs = 100
-batch_size = 10
+count_epochs = 150
+batch_size = 20
 learning_rate = 0.001
 input_size = len(X_train[0])
 hidden_size = 60
