@@ -85,7 +85,7 @@ body {
 }
 
 .chat-box-header {
-    background: url("Group_8_1.svg");
+    background: url("chat-bot-header.svg");
     position: relative;
     color: white;
     height: 60px;
